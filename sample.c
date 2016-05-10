@@ -8,6 +8,7 @@ using namespace std;
 class USBDevice { 
  public:
     USBDevice() {};
+    virtual ~USBDevice() {};
     int usb_control_transfer( int timeout );
     int data;
 };
@@ -23,7 +24,7 @@ USBDevice::usb_control_transfer(int timeout)
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-struct USBMock : public USBDevice {
+class USBMock : public USBDevice {
     MOCK_METHOD1(usb_control_transfer,  int(unsigned int timeout) );
 };
 
