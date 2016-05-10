@@ -38,20 +38,21 @@ class USBMock : public USBDevice {
 
 TEST(Setup,first)
 {
-    USBDevice *blah;
-    int tmp = blah->usb_control_transfer(0);
+    USBDevice blah;
+    int tmp = blah.usb_control_transfer(0);
     ASSERT_EQ( tmp, 0);
 }
 
 TEST(Setup,Something)
 {
     ASSERT_EQ(1,1);
-    USBMock myfoo;
-    /* EXPECT_CALL(myfoo, usb_control_transfer(100)).WillOnce(Return(0)).WillOnce(Return(1)); */
-    /* int retval = myfoo.usb_control_transfer(100); */
-    /* EXPECT_EQ( 0, retval ); */
-    /* retval = myfoo.usb_control_transfer(100); */
-    /* EXPECT_EQ( 0, retval ); */
+    USBMock *myfoo = new USBMock();
+    EXPECT_CALL(*myfoo, usb_control_transfer(100)).WillOnce(Return(0)).WillOnce(Return(1));
+    int retval = myfoo->usb_control_transfer(100);
+    EXPECT_EQ( 0, retval );
+    retval = myfoo->usb_control_transfer(100);
+    EXPECT_EQ( 1, retval );
+    delete myfoo;
 }
 
 int
