@@ -15,12 +15,8 @@ struct ADCConfigBlock {
 
 
 struct USBDevice { 
-#ifdef __cplusplus
     USBDevice();
     int usb_control_transfer( USBDevice *usbdev, uint8_t request_type, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, unsigned char *data, uint16_t wLength, unsigned int timeout );
-#else
-    int (*usb_control_transfer)( USBDevice *usbdev, uint8_t request_type, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, unsigned char *data, uint16_t wLength, unsigned int timeout );
-#endif
 
     uint8_t timeout;
     int usblp_attached;
