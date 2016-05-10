@@ -24,13 +24,16 @@ USBDevice::usb_control_transfer(int timeout)
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-class USBMock : public USBDevice {
-    MOCK_METHOD1(usb_control_transfer,  int(unsigned int timeout) );
-};
 
 using ::testing::Return;
 using ::testing::_;
 using ::testing::Mock;
+
+
+class USBMock : public USBDevice {
+ public:
+    MOCK_METHOD1(usb_control_transfer,  int(int timeout) );
+};
 
 TEST(Setup,first)
 {
@@ -42,7 +45,11 @@ TEST(Setup,first)
 TEST(Setup,Mock)
 {
     USBMock myfoo;
-    Mock::VerifyAndClearExpectations(&myfoo); 
+    EXPECT_CALL(myfoo, usb_control_transfer(100)).WillOnce(Return(0)).WillOnce(Return(1));
+    int retval = myfoo.usb_control_transfer(100);
+    EXPECT_EQ( 0, retval );
+    retval = myfoo.usb_control_transfer(100);
+    EXPECT_EQ( 0, retval );
 }
 
 int
