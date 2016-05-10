@@ -9,7 +9,7 @@ class USBDevice {
  public:
     USBDevice() {};
     virtual ~USBDevice() {};
-    int usb_control_transfer( int timeout );
+    virtual int usb_control_transfer( int timeout );
     int data;
 };
 
