@@ -17,14 +17,7 @@ struct ADCConfigBlock {
 struct USBDevice { 
     USBDevice();
     int usb_control_transfer( USBDevice *usbdev, uint8_t request_type, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, unsigned char *data, uint16_t wLength, unsigned int timeout );
-
-    uint8_t timeout;
-    int usblp_attached;
-    int iface;
-    int verbose;
-    int conf;
-    int origconf;
-    int altset;
+    int data;
 };
 
 
@@ -37,8 +30,6 @@ USBDevice::usb_control_transfer(USBDevice *dev_handle,
                                 uint8_t request_type, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
                                 unsigned char *data, uint16_t wLength, unsigned int timeout)
 {
-
-    /* libusb_device_handle *handle = get_usb_device( dev_handle ); */
     cout << "Doign handle setup\n";
     cout << "Running a libusb transaction\n";
     return 0;
