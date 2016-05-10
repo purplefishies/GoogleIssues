@@ -5,30 +5,22 @@
 
 
 using namespace std;
+#if 0
 typedef struct USBDevice USBDevice;
-typedef struct ADCConfigBlock ADCConfigBlock;
-struct ADCConfigBlock {
-    int foo;
-    char *bar;
-
-};
-
-
 struct USBDevice { 
-    USBDevice();
-    int usb_control_transfer( USBDevice *usbdev, uint8_t request_type, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, unsigned char *data, uint16_t wLength, unsigned int timeout );
+    int usb_control_transfer( USBDevice *usbdev, int timeout );
     int data;
 };
-
-
-USBDevice::USBDevice() { 
-    std::cout << "Creating USB Device\n";
-}
+#else
+class USBDevice { 
+ public:
+    int usb_control_transfer( USBDevice *usbdev, int timeout );
+    int data;
+};
+#endif
 
 int 
-USBDevice::usb_control_transfer(USBDevice *dev_handle,
-                                uint8_t request_type, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
-                                unsigned char *data, uint16_t wLength, unsigned int timeout)
+USBDevice::usb_control_transfer(USBDevice *dev_handle, int timeout)
 {
     cout << "Doign handle setup\n";
     cout << "Running a libusb transaction\n";
@@ -41,36 +33,33 @@ USBDevice::usb_control_transfer(USBDevice *dev_handle,
 
 
 struct USBMock : public USBDevice {
-    MOCK_METHOD8(usb_control_transfer,  int(USBDevice *,uint8_t request_type, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
-                                            unsigned char *data, uint16_t wLength, unsigned int timeout));
+    MOCK_METHOD2(usb_control_transfer,  int(USBDevice *, unsigned int timeout));
 };
 
-using ::testing::Return;                            // #1
+using ::testing::Return;
 using ::testing::_;
 
 TEST(Setup,first)
 {
     USBDevice blah;
-    int tmp = blah.usb_control_transfer(&blah,0,0,0,0,0,0,0);
+    int tmp = blah.usb_control_transfer(&blah,0);
     ASSERT_EQ( tmp, 0);
-
 }
 
 
 TEST(Setup,Mock)
 {
-    USBMock myfoo;
 #if 0
-    EXPECT_CALL( myfoo, usb_control_transfer( &myfoo,0,0,0,0,0,0,0))
+    USBMock myfoo;
+    EXPECT_CALL( myfoo, usb_control_transfer( &myfoo,0))
         .WillOnce( Return(0) )
         .WillOnce( Return(1) );
-    int retval = myfoo.usb_control_transfer( &myfoo,0,0,0,0,0,0,0);
+    int retval = myfoo.usb_control_transfer( &myfoo,0);
     ASSERT_EQ( retval, 0);
-    retval = myfoo.usb_control_transfer( &myfoo,0,0,0,0,0,0,0 );
+    retval = myfoo.usb_control_transfer( &myfoo,0 );
     ASSERT_EQ( retval, 1);
 #endif
 }
-
 
 int
 main(int argc, char *argv[] )
