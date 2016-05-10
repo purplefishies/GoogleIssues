@@ -38,8 +38,8 @@ class USBMock : public USBDevice {
 
 TEST(Setup,first)
 {
-    USBDevice blah;
-    int tmp = blah.usb_control_transfer(0);
+    USBDevice *blah;
+    int tmp = blah->usb_control_transfer(0);
     ASSERT_EQ( tmp, 0);
 }
 
